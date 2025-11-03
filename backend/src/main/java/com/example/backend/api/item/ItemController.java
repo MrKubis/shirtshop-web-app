@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/items")
@@ -38,9 +39,30 @@ public class ItemController {
         else return  new ResponseEntity<List<Item>>(itemRepository.findAll(example),HttpStatus.OK);
     }
 
+    @GetMapping(params = "id")
+    public ResponseEntity<Item> getItemById(@RequestParam UUID id)
+    {
+        Optional<Item> optional = (itemRepository.findById(id));
+        if(optional.isPresent()) return new ResponseEntity<Item>(optional.get(),HttpStatus.OK);
+        else return ResponseEntity.notFound().build();
+    }
     @PostMapping
     public ResponseEntity<Item> createItem(@RequestBody Item item){
         return new ResponseEntity<Item>(itemRepository.save(item),HttpStatus.CREATED);
     }
+    @PutMapping
+    public ResponseEntity<Item> editItem(@RequestBody Item item){
+        Optional<Item> optional = itemRepository.findById(item.getId());
+        if(optional.isPresent()){
+            Item newitem = optional.get();
+            newitem.setType(item.getType());
+            newitem.setCreated_at(item.getCreated_at());
+            newitem.setName(item.getName());
+            itemRepository.save(newitem);
+            return new ResponseEntity<Item>(newitem,HttpStatus.OK);
+        }
+        else return ResponseEntity.notFound().build();
+    }
+
 
 }

@@ -48,4 +48,18 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+    @PutMapping
+    public ResponseEntity<User> edit(@RequestBody User user){
+        Optional<User> optional = userRepository.findById(user.getId());
+        if(optional.isPresent())
+        {
+            User newuser = optional.get();
+            newuser.setCreated_at(user.getCreated_at());
+            newuser.setEmail(user.getEmail());
+            newuser.setPassword(user.getPassword());
+            userRepository.save(newuser);
+            return new ResponseEntity<User>(newuser,HttpStatus.OK);
+        }
+        else return ResponseEntity.notFound().build();
+    }
 }
