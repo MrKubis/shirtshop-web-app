@@ -35,8 +35,7 @@ public class UserController {
     }
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user){
-        System.out.println(user);
-        return  new ResponseEntity<User>(userRepository.save(user),HttpStatus.CREATED);
+        return new ResponseEntity<User>(userRepository.save(user),HttpStatus.CREATED);
     }
     @DeleteMapping(params = "id")
     public ResponseEntity<Void> deleteUser(@RequestParam UUID id){
