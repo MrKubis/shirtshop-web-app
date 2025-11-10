@@ -7,17 +7,28 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class UserPrincipal implements UserDetails {
 
+    private final Set<GrantedAuthority> authorities;
     private User user;
     public UserPrincipal(User user){
         this.user = user;
+        Set<GrantedAuthority> auths = user.getRoles().stream()
+                .flatMap(role -> role.getAuthorities().stream())
+                .map(authority -> new SimpleGrantedAuthority(authority.getName()))
+                .collect(Collectors.toSet());
+
+        user.getRoles().forEach(role -> auths.add(new SimpleGrantedAuthority("ROLE_" + role.getName())));
+
+        this.authorities = auths;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority("USER"));
+        return authorities;
     }
 
     @Override

@@ -4,9 +4,11 @@ import com.example.backend.api.DTO.RegisterUserDTO;
 import com.example.backend.api.Models.User;
 import com.example.backend.api.Repositories.UserRepository;
 import com.example.backend.api.Services.UserService;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
