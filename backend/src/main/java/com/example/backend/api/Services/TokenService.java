@@ -1,6 +1,6 @@
-package com.example.backend.service;
+package com.example.backend.api.Services;
 
-import com.example.backend.api.auth.Token;
+import com.example.backend.api.Models.Token;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;

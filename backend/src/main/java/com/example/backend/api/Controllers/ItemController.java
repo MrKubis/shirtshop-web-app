@@ -1,10 +1,11 @@
-package com.example.backend.api.item;
+package com.example.backend.api.Controllers;
 
+import com.example.backend.api.Models.Item;
+import com.example.backend.api.Repositories.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

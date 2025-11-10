@@ -1,13 +1,11 @@
-package com.example.backend.api.itemInstance;
+package com.example.backend.api.Models;
 
-import com.example.backend.api.item.Item;
-import com.example.backend.api.user.User;
 import jakarta.persistence.*;
 
 import java.util.UUID;
 
 @Table
-@Entity
+@Entity(name = "item_instances")
 public class ItemInstance {
     @Id
     @GeneratedValue

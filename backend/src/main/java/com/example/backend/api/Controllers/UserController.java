@@ -1,5 +1,9 @@
-package com.example.backend.api.user;
+package com.example.backend.api.Controllers;
 
+import com.example.backend.api.DTO.RegisterUserDTO;
+import com.example.backend.api.Models.User;
+import com.example.backend.api.Repositories.UserRepository;
+import com.example.backend.api.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +19,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping
     public ResponseEntity<List<User>> getUsers(){
@@ -33,9 +40,17 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user){
-        return new ResponseEntity<User>(userRepository.save(user),HttpStatus.CREATED);
+    @PostMapping("/register")
+
+    public ResponseEntity<?> registerUser(@RequestBody RegisterUserDTO dto){
+        if(userService.existsByUserName(dto)) {
+            return ResponseEntity.badRequest().body("Username taken");
+        }
+        if(userService.existsByEmail(dto)){
+            return  ResponseEntity.badRequest().body("Email is taken");
+        }
+        userService.register(dto);
+        return new ResponseEntity<RegisterUserDTO>(dto,HttpStatus.CREATED);
     }
     @DeleteMapping(params = "id")
     public ResponseEntity<Void> deleteUser(@RequestParam UUID id){

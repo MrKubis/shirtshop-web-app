@@ -1,14 +1,13 @@
-package com.example.backend.api.item;
+package com.example.backend.api.Models;
 
 import jakarta.persistence.*;
-import org.aspectj.lang.annotation.RequiredTypes;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table
+@Table(name = "items")
 public class Item {
     @Id
     @GeneratedValue

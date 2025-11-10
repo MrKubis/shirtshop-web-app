@@ -1,6 +1,7 @@
-package com.example.backend.api.itemInstance;
+package com.example.backend.api.Controllers;
 
-import com.example.backend.api.item.Item;
+import com.example.backend.api.Repositories.ItemInstanceRepository;
+import com.example.backend.api.Models.ItemInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

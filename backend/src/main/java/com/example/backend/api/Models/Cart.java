@@ -1,11 +1,8 @@
-package com.example.backend.api.cart;
+package com.example.backend.api.Models;
 
-import com.example.backend.api.itemInstance.ItemInstance;
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 

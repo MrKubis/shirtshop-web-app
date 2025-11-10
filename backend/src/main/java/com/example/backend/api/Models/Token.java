@@ -1,4 +1,4 @@
-package com.example.backend.api.auth;
+package com.example.backend.api.Models;
 
 import java.time.Instant;
 
