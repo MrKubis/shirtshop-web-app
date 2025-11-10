@@ -23,14 +23,10 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
     public boolean existsByUserName(RegisterUserDTO dto){
-        User user = new User();
-        user.setUserName(dto.userName());
-        return userRepository.exists(Example.of(user));
+        return userRepository.findByUserName(dto.userName()).isPresent();
     }
     public boolean existsByEmail(RegisterUserDTO dto){
-        User user = new User();
-        user.setEmail(dto.email());
-        return userRepository.exists(Example.of(user));
+        return userRepository.findByEmail(dto.email()).isPresent();
     }
 
     public void register(RegisterUserDTO dto){
