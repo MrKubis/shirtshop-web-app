@@ -43,7 +43,6 @@ public class UserController {
         }
     }
     @PostMapping("/register")
-
     public ResponseEntity<?> registerUser(@RequestBody RegisterUserDTO dto){
         if(userService.existsByUserName(dto)) {
             return ResponseEntity.badRequest().body("Username taken");

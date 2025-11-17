@@ -18,11 +18,11 @@ public class Cart {
     @Column(name="list_item_instance_id")
     private List<UUID> itemInstanceIdList;
     @Column(name = "user_id")
-    private UUID user_id;
+    private UUID userId;
     @Column(name = "created_at")
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
     @Column(name = "expired_at")
-    private  LocalDateTime expired_at;
+    private  LocalDateTime expiredAt;
 
     public UUID getId() {
         return id;
@@ -41,38 +41,37 @@ public class Cart {
     }
 
     public UUID getUser_id() {
-        return user_id;
+        return userId;
     }
 
     public void setUser_id(UUID user_id) {
-        this.user_id = user_id;
+        this.userId = user_id;
     }
 
     public LocalDateTime getCreated_at() {
-        return created_at;
+        return createdAt;
     }
 
     public void setCreated_at(LocalDateTime created_at) {
-        this.created_at = created_at;
+        this.createdAt = created_at;
     }
 
     public LocalDateTime getExpired_at() {
-        return expired_at;
+        return expiredAt;
     }
 
     public void setExpired_at(LocalDateTime expired_at) {
-        this.expired_at = expired_at;
+        this.expiredAt = expired_at;
     }
 
     @PrePersist
     public void onCreate(){
-        this.created_at = LocalDateTime.now();
-        this.expired_at = this.created_at.plusHours(1);
+        this.createdAt = LocalDateTime.now();
+        this.expiredAt = this.createdAt.plusHours(1);
     }
     public Cart(){}
     public Cart(List<UUID> itemInstanceIdList, UUID user_id) {
         this.itemInstanceIdList = itemInstanceIdList;
-        this.user_id = user_id;
-        this.expired_at = getCreated_at().plusHours(1);
+        this.userId = user_id;
     }
 }

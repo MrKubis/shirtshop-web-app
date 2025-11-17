@@ -1,15 +1,14 @@
 package com.example.backend.api.Controllers;
 
+import com.example.backend.api.DTO.CartUserIdDTO;
 import com.example.backend.api.Models.Cart;
-import com.example.backend.api.Repositories.CartRepository;
+import com.example.backend.api.Services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -17,43 +16,30 @@ import java.util.UUID;
 public class CartController {
 
     @Autowired
-    private CartRepository cartRepository;
+    private CartService cartService;
 
     @GetMapping
     public ResponseEntity<List<Cart>> getCarts(){
-        if(cartRepository.findAll().isEmpty())
-        {
-            return ResponseEntity.notFound().build();
-        }
-        else return new ResponseEntity<List<Cart>>(cartRepository.findAll(), HttpStatus.OK);
+        return cartService.getCarts();
     }
     @GetMapping(params = "user_id")
     public ResponseEntity<List<Cart>> getCartsByUserId(@RequestParam UUID user_id){
-        Cart cart = new Cart();
-        cart.setUser_id(user_id);
-        Example<Cart> example = Example.of(cart);
-        Optional<List<Cart>> optional = Optional.of(cartRepository.findAll(example));
-        if(optional.isEmpty())
-            return ResponseEntity.notFound().build();
-        else return new ResponseEntity<List<Cart>>(cartRepository.findAll(example),HttpStatus.OK);
+        return cartService.getCartsByUserId(user_id);
+    }
+    @PostMapping("/userid")
+    public ResponseEntity<Cart> createCart(@RequestBody CartUserIdDTO cartUserIdDTO){
+        return cartService.createCartWithUserId(cartUserIdDTO);
     }
     @PostMapping
-    public ResponseEntity<Cart> createCart(@RequestBody Cart cart){
-        return new ResponseEntity<Cart>(cartRepository.save(cart),HttpStatus.CREATED);
+    public ResponseEntity<Cart> createCart(Authentication authentication){
+        return cartService.createCart(authentication);
     }
     @PutMapping
-    public ResponseEntity<Cart> editItem(@RequestBody Cart cart){
-        Optional<Cart> optional = cartRepository.findById(cart.getId());
-        if(optional.isPresent()){
-            Cart newcart = optional.get();
-            newcart.setUser_id(cart.getUser_id());
-            newcart.setCreated_at(cart.getCreated_at());
-            newcart.setExpired_at(cart.getCreated_at().plusHours(1));
-            newcart.setItemInstanceIdList(cart.getItemInstanceIdList());
-            cartRepository.save(newcart);
-            return new ResponseEntity<Cart>(newcart, HttpStatus.OK);
-        }
-        else return ResponseEntity.notFound().build();
+    public ResponseEntity<Cart> editCart(@RequestBody Cart cart){
+        return cartService.editCart(cart);
     }
-    //TODO ADD TO CART
+    @PutMapping(value = "/add/{itemInstanceId}")
+    public ResponseEntity<Cart> addToCart(@RequestParam UUID itemInstanceId , Authentication authentication){
+        return cartService.addToCart(itemInstanceId, authentication);
+    }
 }
