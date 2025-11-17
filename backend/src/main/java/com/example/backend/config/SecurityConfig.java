@@ -56,7 +56,6 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(10);
     }
-    //Dla testów
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         //AUTHENTICATION FOR JWT
