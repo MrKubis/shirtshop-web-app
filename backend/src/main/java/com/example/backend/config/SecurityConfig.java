@@ -20,6 +20,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -35,6 +36,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final RsaKeyProperties rsaKeys;
@@ -65,8 +67,9 @@ public class SecurityConfig {
         return http
                 .csrf(scrf -> scrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/token", "/api/auth/register").permitAll()
                         .requestMatchers("/api/users/**").hasRole("ADMIN") // TUTAJ ODMAWIA DOSTEPU KAZDEMU
+                        .requestMatchers("/api/roles/**").hasRole("ADMIN")
+                        .requestMatchers("/api/auth/token", "/api/auth/register").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer((oauth2) -> oauth2
                         .jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter)))
@@ -96,6 +99,12 @@ public class SecurityConfig {
                 User user = new User("admin","admin@example.com",encoder.encode("Zaq12wsx"));
                 user.getRoles().add(adminRole);
                 System.out.println("Default admin created");
+                userRepository.save(user);
+            }
+            if(userRepository.findByUserName("user").isEmpty()){
+                User user = new User("user", "user@example.com",encoder.encode("Zaq12wsx"));
+                user.getRoles().add(userRole);
+                System.out.println("Default user created");
                 userRepository.save(user);
             }
         };
