@@ -1,6 +1,7 @@
 package com.example.backend.api.Services;
 
 import com.example.backend.api.Models.Token;
+import com.example.backend.api.Principals.UserPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -22,6 +23,7 @@ public class TokenService {
     }
 
     public Token generateToken(Authentication authentication){
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         Instant now = Instant.now();
         List<String> roles = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -33,6 +35,7 @@ public class TokenService {
                 .issuer("self")
                 .issuedAt(now)
                 //Długość życia tokenu
+                .claim("userId", userPrincipal.getId())
                 .expiresAt(now.plus(1, ChronoUnit.HOURS))
                 .subject(authentication.getName())
                 .claim("scope",scope)

@@ -33,6 +33,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -64,6 +65,7 @@ public class SecurityConfig {
         jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("roles");
         jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
+
         return http
                 .csrf(scrf -> scrf.disable())
                 .authorizeHttpRequests(auth -> auth
@@ -75,6 +77,7 @@ public class SecurityConfig {
                         .jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter)))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(Customizer.withDefaults())
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
     @Bean
@@ -85,6 +88,10 @@ public class SecurityConfig {
         return provider;
     }
 
+    @Bean
+    public JWTAuthenticationFilter jwtAuthenticationFilter(){
+        return new JWTAuthenticationFilter();
+    }
     @Bean
     public CommandLineRunner createDefaultAdmin(UserRepository userRepository, PasswordEncoder encoder){
         return args -> {
