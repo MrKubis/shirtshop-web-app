@@ -3,16 +3,16 @@ version: "3.8"
 services:
   postgres:
     image: postgres:15
-    container_name: spring_postgres
+    container_name: spring_postgres_webshop_app
     restart: always
     ports:
       - "5432:5432"
     environment:
       POSTGRES_DB: webshop
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/webshop/data
 
 volumes:
   postgres_data: {}
