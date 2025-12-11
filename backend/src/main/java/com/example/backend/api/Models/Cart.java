@@ -1,9 +1,7 @@
 package com.example.backend.api.Models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,6 +12,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "carts")
+@Getter
+@Setter
 public class Cart {
 
     @Id
@@ -29,46 +29,6 @@ public class Cart {
     private LocalDateTime createdAt;
     @Column(name = "expired_at")
     private  LocalDateTime expiredAt;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public List<UUID> getItemInstanceIdList() {
-        return itemInstanceIdList;
-    }
-
-    public void setItemInstanceIdList(List<UUID> itemInstanceIdList) {
-        this.itemInstanceIdList = itemInstanceIdList;
-    }
-
-    public UUID getUser_id() {
-        return userId;
-    }
-
-    public void setUser_id(UUID user_id) {
-        this.userId = user_id;
-    }
-
-    public LocalDateTime getCreated_at() {
-        return createdAt;
-    }
-
-    public void setCreated_at(LocalDateTime created_at) {
-        this.createdAt = created_at;
-    }
-
-    public LocalDateTime getExpired_at() {
-        return expiredAt;
-    }
-
-    public void setExpired_at(LocalDateTime expired_at) {
-        this.expiredAt = expired_at;
-    }
 
     @PrePersist
     public void onCreate(){

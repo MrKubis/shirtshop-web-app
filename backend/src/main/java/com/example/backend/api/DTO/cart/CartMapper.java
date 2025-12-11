@@ -12,9 +12,9 @@ public class CartMapper {
     public CartDto toCartDto(final Cart entity){
         return CartDto.builder()
                 .id(entity.getId())
-                .userId(entity.getUser_id())
-                .createdAt(entity.getCreated_at())
-                .expiredAt(entity.getExpired_at())
+                .userId(entity.getUserId())
+                .createdAt(entity.getCreatedAt())
+                .expiredAt(entity.getExpiredAt())
                 .build();
     }
     public Cart toCart(final CartDto dto){
@@ -49,9 +49,9 @@ public class CartMapper {
         }
         return Cart.builder()
                 .id(entity.getId())
-                .userId(entity.getUser_id())
-                .createdAt(entity.getCreated_at())
-                .expiredAt(entity.getExpired_at())
+                .userId(entity.getUserId())
+                .createdAt(entity.getCreatedAt())
+                .expiredAt(entity.getExpiredAt())
                 .itemInstanceIdList(updatedList)
                 .build();
     }
