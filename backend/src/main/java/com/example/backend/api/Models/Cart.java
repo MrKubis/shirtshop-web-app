@@ -1,11 +1,17 @@
 package com.example.backend.api.Models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "carts")
 public class Cart {
@@ -24,21 +30,7 @@ public class Cart {
     @Column(name = "expired_at")
     private  LocalDateTime expiredAt;
 
-    public UUID getId() {
-        return id;
-    }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public List<UUID> getItemInstanceIdList() {
-        return itemInstanceIdList;
-    }
-
-    public void setItemInstanceIdList(List<UUID> itemInstanceIdList) {
-        this.itemInstanceIdList = itemInstanceIdList;
-    }
 
     public UUID getUser_id() {
         return userId;
@@ -68,10 +60,5 @@ public class Cart {
     public void onCreate(){
         this.createdAt = LocalDateTime.now();
         this.expiredAt = this.createdAt.plusHours(1);
-    }
-    public Cart(){}
-    public Cart(List<UUID> itemInstanceIdList, UUID user_id) {
-        this.itemInstanceIdList = itemInstanceIdList;
-        this.userId = user_id;
     }
 }

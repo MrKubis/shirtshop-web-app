@@ -1,9 +1,11 @@
 package com.example.backend.api.Controllers;
 
-import com.example.backend.api.DTO.CartUserIdDTO;
+import com.example.backend.api.DTO.cart.CartDto;
+import com.example.backend.api.DTO.cart.PatchCartDto;
 import com.example.backend.api.Models.Cart;
 import com.example.backend.api.Services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -19,27 +21,23 @@ public class CartController {
     private CartService cartService;
 
     @GetMapping
-    public ResponseEntity<List<Cart>> getCarts(){
-        return cartService.getCarts();
+    public List<CartDto> getAll(){
+        return cartService.get();
     }
-    @GetMapping(params = "user_id")
-    public ResponseEntity<List<Cart>> getCartsByUserId(@RequestParam UUID user_id){
-        return cartService.getCartsByUserId(user_id);
-    }
-    @PostMapping("/userid")
-    public ResponseEntity<Cart> createCart(@RequestBody CartUserIdDTO cartUserIdDTO){
-        return cartService.createCartWithUserId(cartUserIdDTO);
+    @GetMapping("/user")
+    public CartDto getByAuthentication(Authentication authentication){
+        return cartService.getByAuthentication(authentication);
     }
     @PostMapping
-    public ResponseEntity<Cart> createCart(Authentication authentication){
-        return cartService.createCart(authentication);
+    public CartDto post(Authentication authentication){
+        return cartService.create(authentication);
     }
-    @PutMapping
-    public ResponseEntity<Cart> editCart(@RequestBody Cart cart){
-        return cartService.editCart(cart);
+    @PatchMapping("/{id}")
+    public CartDto patch(@RequestParam UUID id,@RequestBody PatchCartDto dto){
+        return cartService.patch(id, dto);
     }
-    @PutMapping(value = "/add/{itemInstanceId}")
-    public ResponseEntity<Cart> addToCart(@RequestParam UUID itemInstanceId , Authentication authentication){
+    @PatchMapping(value = "/add/{itemInstanceId}")
+    public CartDto addToCart(@PathVariable UUID itemInstanceId , Authentication authentication){
         return cartService.addToCart(itemInstanceId, authentication);
     }
 }

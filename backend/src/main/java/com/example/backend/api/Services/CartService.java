@@ -1,6 +1,9 @@
 package com.example.backend.api.Services;
 
-import com.example.backend.api.DTO.CartUserIdDTO;
+import com.example.backend.api.DTO.cart.CartDto;
+import com.example.backend.api.DTO.cart.CartMapper;
+import com.example.backend.api.DTO.cart.PatchCartDto;
+import com.example.backend.api.Exceptions.*;
 import com.example.backend.api.Models.Cart;
 import com.example.backend.api.Models.ItemInstance;
 import com.example.backend.api.Principals.UserPrincipal;
@@ -15,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -26,99 +30,103 @@ public class CartService {
     private UserRepository userRepository;
     @Autowired
     private ItemInstanceRepository itemInstanceRepository;
-    public ResponseEntity<List<Cart>> getCartsByUserId(UUID user_id){
-        Cart cart = new Cart();
-        cart.setUser_id(user_id);
-        Example<Cart> example = Example.of(cart);
-        Optional<List<Cart>> optional = Optional.of(cartRepository.findAll(example));
-        if(optional.get().isEmpty())
-            return ResponseEntity.notFound().build();
-        else return new ResponseEntity<List<Cart>>(cartRepository.findAll(example), HttpStatus.OK);
-    }
+    @Autowired
+    private CartMapper cartMapper;
 
-    public ResponseEntity<List<Cart>> getCarts(){
-        if(cartRepository.findAll().isEmpty())
-        {
-            return ResponseEntity.notFound().build();
+    public List<CartDto> get(){
+        return cartRepository.findAll()
+                .stream()
+                .map(cartMapper::toCartDto)
+                .toList();
+    }
+    public CartDto getByAuthentication(Authentication authentication){
+        Object principal = authentication.getPrincipal();
+        UUID userId;
+
+        if (principal instanceof UserPrincipal userPrincipal) {
+            if (!userPrincipal.isEnabled())
+                throw new UserNotFoundException();
+            userId = userPrincipal.getId();
         }
-        else return new ResponseEntity<List<Cart>>(cartRepository.findAll(), HttpStatus.OK);
+        else if (principal instanceof Jwt jwt) {
+            String userIdStr = jwt.getClaimAsString("userId");
+            if (userIdStr.isEmpty())
+                throw new UserNotFoundException();
+            userId = UUID.fromString(userIdStr);
+        } else {
+            userId = null;
+        }
+        if(userId == null) throw new UserNotFoundException();
+
+        return cartRepository.findByUserId(userId)
+                .map(cartMapper::toCartDto)
+                .orElseThrow(()-> new UserCartNotFoundException(userId));
     }
 
-    public ResponseEntity<Cart> createCart(Authentication authentication) {
+    public CartDto getByUserId(UUID user_id) {
+        return cartRepository.findByUserId(user_id)
+                .map(cartMapper::toCartDto)
+                .orElseThrow(() -> new UserCartNotFoundException(user_id));
+    }
+
+    public CartDto create(Authentication authentication) {
         Object principal = authentication.getPrincipal();
         UUID userId = null;
 
         if (principal instanceof UserPrincipal userPrincipal) {
             if (!userPrincipal.isEnabled())
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            userId = userPrincipal.getId();
-        } else if (principal instanceof Jwt jwt) {
-            String userIdStr = jwt.getClaimAsString("userId");
-            if (userIdStr.isEmpty())
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            userId = UUID.fromString(userIdStr);
-        }
-
-        Cart cart = new Cart(new ArrayList<>(), userId);
-        return new ResponseEntity<Cart>(cartRepository.save(cart), HttpStatus.CREATED);
-        }
-
-    public ResponseEntity<Cart> createCartWithUserId(CartUserIdDTO cartUserIdDTO){
-        Cart cart = new Cart(new ArrayList<>(),cartUserIdDTO.UserId());
-        return new ResponseEntity<Cart>(cartRepository.save(cart),HttpStatus.CREATED);
-    }
-
-    public ResponseEntity<Cart> editCart(Cart cart){
-        Optional<Cart> optional = cartRepository.findById(cart.getId());
-        if(optional.isPresent()){
-            Cart newcart = optional.get();
-            newcart.setUser_id(cart.getUser_id());
-            newcart.setCreated_at(cart.getCreated_at());
-            newcart.setExpired_at(cart.getCreated_at().plusHours(1));
-            newcart.setItemInstanceIdList(cart.getItemInstanceIdList());
-            cartRepository.save(newcart);
-            return new ResponseEntity<Cart>(newcart, HttpStatus.OK);
-        }
-        else return ResponseEntity.notFound().build();
-    }
-
-    public ResponseEntity<Cart> addToCart(UUID itemInstanceId, Authentication authentication){
-
-        checkCart(authentication);
-
-        //CHECK IF ITEMINSTANCE EXISTS AND IS AVAILBLE
-        Optional<ItemInstance> optional = itemInstanceRepository.findById(itemInstanceId);
-        if(optional.isEmpty())
-            return ResponseEntity.notFound().build();
-        ItemInstance itemInstance = optional.get();
-        if(!Objects.equals(itemInstance.getStatus(), "AVAILABLE"))
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-
-        //ADDING ITEMINSTANCE
-        UserPrincipal userPrincipal = (UserPrincipal)authentication.getPrincipal();
-        Optional<Cart> cartOptional = cartRepository.findByUserId(userPrincipal.getId());
-        if(cartOptional.isEmpty())
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        Cart cart = cartOptional.get();
-        cart.getItemInstanceIdList().add(itemInstance.getId());
-        itemInstance.setStatus("IN_CART");
-        itemInstanceRepository.save(itemInstance);
-        return new ResponseEntity<Cart>(cartRepository.save(cart),HttpStatus.OK);
-    }
-
-    private void checkCart(Authentication authentication){
-        Object principal = authentication.getPrincipal();
-        UUID userId = null;
-
-        if (principal instanceof UserPrincipal userPrincipal) {
+                throw new UserNotFoundException();
             userId = userPrincipal.getId();
         }
         else if (principal instanceof Jwt jwt) {
             String userIdStr = jwt.getClaimAsString("userId");
+            if (userIdStr.isEmpty())
+                throw new UserNotFoundException();
             userId = UUID.fromString(userIdStr);
         }
-        Optional<Cart> cartOptional = cartRepository.findByUserId(userId);
-        if(cartOptional.isEmpty())
-            createCart(authentication);
+    Cart cart = Cart.builder()
+            .userId(userId)
+            .createdAt(LocalDateTime.now())
+            .expiredAt(LocalDateTime.now().plusDays(1))
+            .itemInstanceIdList(new ArrayList<>())
+            .build();
+        return cartMapper.toCartDto(cartRepository.save(cart));
+        }
+
+    public CartDto patch(UUID id,PatchCartDto dto){
+            return cartRepository.findById(id)
+                    .map((entity) -> cartMapper.fromPatchDto(entity,dto))
+                    .map(cartRepository::save)
+                    .map(cartMapper::toCartDto)
+                    .orElseThrow(()-> new CartNotFoundException(id));
+        }
+
+
+    public CartDto addToCart(UUID itemInstanceId, Authentication authentication){
+        Object principal = authentication.getPrincipal();
+        UUID userId;
+        if (principal instanceof UserPrincipal userPrincipal) {
+            if (!userPrincipal.isEnabled())
+                throw new UserNotFoundException();
+            userId = userPrincipal.getId();
+        }
+        else if (principal instanceof Jwt jwt) {
+            String userIdStr = jwt.getClaimAsString("userId");
+            if (userIdStr.isEmpty())
+                throw new UserNotFoundException();
+            userId = UUID.fromString(userIdStr);
+        }
+        else throw new UserNotFoundException();
+        System.out.println(itemInstanceId);
+
+        itemInstanceRepository.findById(itemInstanceId).orElseThrow(()-> new ItemInstanceNotFoundException(itemInstanceId));
+
+        return  cartRepository.findByUserId(userId)
+                .map((entity)->cartMapper.addItem(entity,itemInstanceId))
+                .map(cartRepository::save)
+                .map(cartMapper::toCartDto)
+                .orElseThrow(()->new UserCartNotFoundException(userId));
     }
+
 }
+
