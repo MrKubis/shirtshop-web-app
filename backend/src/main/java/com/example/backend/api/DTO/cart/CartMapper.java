@@ -2,7 +2,6 @@ package com.example.backend.api.DTO.cart;
 
 import com.example.backend.api.Models.Cart;
 import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -33,7 +32,7 @@ public class CartMapper {
                 .expiredAt(dto.expiredAt())
                 .build();
     }
-    public Cart fromPostDto(final Cart entity, final PostCartDto dto)
+    public Cart fromPostDto(final PostCartDto dto)
     {
         return Cart.builder()
                 .userId(dto.userId())
@@ -47,6 +46,7 @@ public class CartMapper {
         if(entity.getItemInstanceIdList() != null){
             updatedList.addAll(entity.getItemInstanceIdList());
         }
+        updatedList.add(itemInstanceID);
         return Cart.builder()
                 .id(entity.getId())
                 .userId(entity.getUserId())
