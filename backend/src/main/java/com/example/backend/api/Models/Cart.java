@@ -30,7 +30,21 @@ public class Cart {
     @Column(name = "expired_at")
     private  LocalDateTime expiredAt;
 
+    public UUID getId() {
+        return id;
+    }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public List<UUID> getItemInstanceIdList() {
+        return itemInstanceIdList;
+    }
+
+    public void setItemInstanceIdList(List<UUID> itemInstanceIdList) {
+        this.itemInstanceIdList = itemInstanceIdList;
+    }
 
     public UUID getUser_id() {
         return userId;
