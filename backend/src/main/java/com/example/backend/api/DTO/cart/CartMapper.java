@@ -1,5 +1,6 @@
 package com.example.backend.api.DTO.cart;
 
+import com.example.backend.api.Exceptions.ItemInstanceNotFoundException;
 import com.example.backend.api.Models.Cart;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
@@ -8,10 +9,11 @@ import java.util.UUID;
 
 @Component
 public class CartMapper {
-    public CartDto toCartDto(final Cart entity){
+    public CartDto toDto(final Cart entity){
         return CartDto.builder()
                 .id(entity.getId())
                 .userId(entity.getUserId())
+                .itemInstanceIdList(entity.getItemInstanceIdList())
                 .createdAt(entity.getCreatedAt())
                 .expiredAt(entity.getExpiredAt())
                 .build();
@@ -21,15 +23,18 @@ public class CartMapper {
                 .id(dto.id())
                 .userId(dto.userId())
                 .createdAt(dto.createdAt())
+                .itemInstanceIdList(dto.itemInstanceIdList())
                 .expiredAt(dto.expiredAt())
                 .build();
     }
     public Cart fromPatchDto(final Cart entity,final PatchCartDto dto)
     {
         return Cart.builder()
+                .id(entity.getId())
                 .userId(dto.userId())
                 .createdAt(dto.createdAt())
                 .expiredAt(dto.expiredAt())
+                .itemInstanceIdList(dto.itemInstanceIdList())
                 .build();
     }
     public Cart fromPostDto(final PostCartDto dto)
@@ -46,7 +51,25 @@ public class CartMapper {
         if(entity.getItemInstanceIdList() != null){
             updatedList.addAll(entity.getItemInstanceIdList());
         }
+
         updatedList.add(itemInstanceID);
+        return Cart.builder()
+                .id(entity.getId())
+                .userId(entity.getUserId())
+                .createdAt(entity.getCreatedAt())
+                .expiredAt(entity.getExpiredAt())
+                .itemInstanceIdList(updatedList)
+                .build();
+    }
+    public Cart removeItem(final Cart entity, final UUID itemInstanceId){
+        if(!entity.getItemInstanceIdList().contains(itemInstanceId)) throw new ItemInstanceNotFoundException(itemInstanceId);
+
+        List<UUID> updatedList = new ArrayList<>();
+        if(entity.getItemInstanceIdList() != null){
+            updatedList.addAll(entity.getItemInstanceIdList());
+        }
+
+        updatedList.remove(itemInstanceId);
         return Cart.builder()
                 .id(entity.getId())
                 .userId(entity.getUserId())

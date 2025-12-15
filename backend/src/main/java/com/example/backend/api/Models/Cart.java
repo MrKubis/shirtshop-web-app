@@ -2,18 +2,21 @@ package com.example.backend.api.Models;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
-@Table(name = "carts")
+@Data
+@Table(name = "items")
+@Accessors(chain = true)
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Cart {
 
     @Id

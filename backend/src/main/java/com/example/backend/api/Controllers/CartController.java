@@ -4,6 +4,7 @@ import com.example.backend.api.DTO.cart.CartDto;
 import com.example.backend.api.DTO.cart.PatchCartDto;
 import com.example.backend.api.Services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,12 +30,21 @@ public class CartController {
     public CartDto post(Authentication authentication){
         return cartService.create(authentication);
     }
-    @PatchMapping("/{id}")
-    public CartDto patch(@RequestParam UUID id,@RequestBody PatchCartDto dto){
+    @PatchMapping("/id/{id}")
+    public CartDto patch(@PathVariable UUID id,@RequestBody PatchCartDto dto){
         return cartService.patch(id, dto);
     }
     @PatchMapping(value = "/add/{itemInstanceId}")
     public CartDto addToCart(@PathVariable UUID itemInstanceId , Authentication authentication){
         return cartService.addToCart(itemInstanceId, authentication);
+    }
+    @PatchMapping(value = "/remove/{itemInstanceId}")
+    public CartDto removeFromCart(@PathVariable UUID itemInstanceId, Authentication authentication){
+        return cartService.removeFromCart(itemInstanceId, authentication);
+    }
+    @DeleteMapping("/{id}")
+    public void removeFromCart(@PathVariable UUID id)
+    {
+        cartService.delete(id);
     }
 }

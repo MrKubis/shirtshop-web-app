@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -13,4 +14,5 @@ import java.util.UUID;
 public interface CartRepository extends JpaRepository<Cart, UUID> {
     Optional<Cart> findByUserId(UUID UserId);
     void deleteByExpiredAtBefore(LocalDateTime date);
+    List<Cart> getAllByExpiredAtBefore(LocalDateTime date);
 }
