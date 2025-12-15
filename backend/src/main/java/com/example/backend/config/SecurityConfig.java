@@ -35,6 +35,8 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.HashSet;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -92,31 +94,6 @@ public class SecurityConfig {
         return new JWTAuthenticationFilter();
     }
     @Bean
-    public CommandLineRunner createDefaultAdmin(UserRepository userRepository, PasswordEncoder encoder){
-        return args -> {
-
-            //CREATING ADMIN AND USER ROLE
-            Role adminRole = roleRepository.findByName("ADMIN")
-                    .orElseGet(() -> roleRepository.save(new Role("ADMIN")));
-            Role userRole = roleRepository.findByName("USER")
-                    .orElseGet(() -> roleRepository.save(new Role("USER")));
-
-            if(userRepository.findByUserName("admin").isEmpty()){
-                User user = new User("admin","admin@example.com",encoder.encode("Zaq12wsx"));
-                user.getRoles().add(adminRole);
-                System.out.println("Default admin created");
-                userRepository.save(user);
-            }
-            if(userRepository.findByUserName("user").isEmpty()){
-                User user = new User("user", "user@example.com",encoder.encode("Zaq12wsx"));
-                user.getRoles().add(userRole);
-                System.out.println("Default user created");
-                userRepository.save(user);
-            }
-        };
-    }
-
-    @Bean
     JwtDecoder jwtDecoder(){
         return NimbusJwtDecoder.withPublicKey(rsaKeys.publicKey()).build();
     }
@@ -127,9 +104,44 @@ public class SecurityConfig {
         JWKSource<SecurityContext> jwkSource = new ImmutableJWKSet<>(new JWKSet(jwk));
         return  new NimbusJwtEncoder(jwkSource);
     }
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return  config.getAuthenticationManager();
+    }
+    @Bean
+    public CommandLineRunner createDefaultAdmin(UserRepository userRepository, PasswordEncoder encoder){
+        return args -> {
+
+            //CREATING ADMIN AND USER ROLE
+            Role adminRole = roleRepository.findByName("ADMIN")
+                    .orElseGet(() -> roleRepository.save(new Role("ADMIN")));
+            Role userRole = roleRepository.findByName("USER")
+                    .orElseGet(() -> roleRepository.save(new Role("USER")));
+
+            if(userRepository.findByUserName("admin").isEmpty()){
+                User user = User.builder()
+                        .userName("admin")
+                        .email("admin@example.com")
+                        .password(encoder.encode("Zaq12wsx"))
+                        .roles(new HashSet<Role>())
+                        .build();
+                user.getRoles().add(adminRole);
+
+                userRepository.save(user);
+                System.out.println("Default admin created");
+
+            }
+            if(userRepository.findByUserName("user").isEmpty()){
+                User user = User.builder()
+                        .userName("user")
+                        .email("example@example.com")
+                        .password(encoder.encode("Zaq12wsx"))
+                        .roles(new HashSet<Role>())
+                        .build();
+                user.getRoles().add(userRole);
+                System.out.println("Default user created");
+                userRepository.save(user);
+            }
+        };
     }
 }

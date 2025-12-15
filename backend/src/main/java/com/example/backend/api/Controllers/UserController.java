@@ -1,6 +1,8 @@
 package com.example.backend.api.Controllers;
 
 import com.example.backend.api.DTO.RegisterUserDTO;
+import com.example.backend.api.DTO.User.PatchUserDto;
+import com.example.backend.api.DTO.User.UserDto;
 import com.example.backend.api.Models.User;
 import com.example.backend.api.Repositories.UserRepository;
 import com.example.backend.api.Services.UserService;
@@ -26,56 +28,26 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<User>> getUsers(){
-    if (userRepository.findAll().isEmpty()){
-        return ResponseEntity.notFound().build();
-        }
-    return new ResponseEntity<List<User>>(userRepository.findAll(), HttpStatus.OK);
+    public List<UserDto> getAll(){
+        return userService.getAll();
     }
-    @GetMapping(params = "id")
-    public ResponseEntity<User> getUserById(@RequestParam UUID id){
-        Optional<User> optional = userRepository.findById(id);
-        if(optional.isPresent()){
-            return new ResponseEntity<User>((User) optional.get(),HttpStatus.OK);
-        }
-        else{
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/{id}")
+    public UserDto getById(@PathVariable UUID id){
+        return userService.getById(id);
     }
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody RegisterUserDTO dto){
-        if(userService.existsByUserName(dto)) {
-            return ResponseEntity.badRequest().body("Username taken");
-        }
-        if(userService.existsByEmail(dto)){
-            return  ResponseEntity.badRequest().body("Email is taken");
-        }
-        userService.register(dto);
-        return new ResponseEntity<RegisterUserDTO>(dto,HttpStatus.CREATED);
+    public UserDto registerUser(@RequestBody RegisterUserDTO dto){
+        return userService.register(dto);
     }
-    @DeleteMapping(params = "id")
-    public ResponseEntity<Void> deleteUser(@RequestParam UUID id){
-        Optional<User> optional = userRepository.findById(id);
-        if(optional.isPresent()){
-            userRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        }
-        else{
-            return ResponseEntity.notFound().build();
-        }
+    @DeleteMapping
+    public void deleteUser(@PathVariable UUID id){
+         userService.delete(id);
     }
-    @PutMapping
-    public ResponseEntity<User> edit(@RequestBody User user){
-        Optional<User> optional = userRepository.findById(user.getId());
-        if(optional.isPresent())
-        {
-            User newuser = optional.get();
-            newuser.setCreated_at(user.getCreated_at());
-            newuser.setEmail(user.getEmail());
-            newuser.setPassword(user.getPassword());
-            userRepository.save(newuser);
-            return new ResponseEntity<User>(newuser,HttpStatus.OK);
-        }
-        else return ResponseEntity.notFound().build();
+    /*
+    @PatchMapping("/{id}")
+    public User edit(@PathVariable UUID id,@RequestBody PatchUserDto dto){
+        return userService.edit(id,dto);
     }
+*/
 }
+

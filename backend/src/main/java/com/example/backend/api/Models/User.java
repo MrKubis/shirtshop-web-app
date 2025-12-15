@@ -1,7 +1,8 @@
 package com.example.backend.api.Models;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -9,8 +10,14 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+@Builder
 @Entity
+@Accessors(chain = true)
 @Table(name = "users")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -35,60 +42,4 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public LocalDateTime getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(LocalDateTime created_at) {
-        this.created_at = created_at;
-    }
-
-
-
-    public User(){}
-    public User(String userName,String email, String password) {
-        this.userName = userName;
-        this.email = email;
-        this.password = password;
-    }
 }

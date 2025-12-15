@@ -1,6 +1,10 @@
 package com.example.backend.api.Services;
 
 import com.example.backend.api.DTO.RegisterUserDTO;
+import com.example.backend.api.DTO.User.UserDto;
+import com.example.backend.api.DTO.User.UserMapper;
+import com.example.backend.api.Exceptions.RoleNotFoundException;
+import com.example.backend.api.Exceptions.UserNotFoundException;
 import com.example.backend.api.Models.Role;
 import com.example.backend.api.Models.User;
 import com.example.backend.api.Repositories.AuthorityRepository;
@@ -10,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -21,15 +28,22 @@ public class UserService {
     private AuthorityRepository authorityRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserMapper userMapper;
 
-    public boolean existsByUserName(RegisterUserDTO dto){
-        return userRepository.findByUserName(dto.userName()).isPresent();
-    }
-    public boolean existsByEmail(RegisterUserDTO dto){
-        return userRepository.findByEmail(dto.email()).isPresent();
+    public List<UserDto> getAll() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toDto)
+                .toList();
     }
 
-    public void register(RegisterUserDTO dto){
+    public UserDto getById(UUID id) {
+        return userRepository.findById(id)
+                .map(userMapper::toDto)
+                .orElseThrow(()-> new UserNotFoundException(id));
+    }
+    public UserDto register(RegisterUserDTO dto){
         User user = new User();
         user.setUserName(dto.userName());
         user.setEmail(dto.email());
@@ -38,12 +52,14 @@ public class UserService {
         //DEFAULT ROLE
 
         Role userRole = roleRepository.findByName("USER")
-                .orElseThrow(() -> new RuntimeException("USER role not found"));
+                .orElseThrow(() -> new RoleNotFoundException("USER role not found"));
         user.getRoles().add(userRole);
-        userRepository.save(user);
+
+        return userMapper.toDto(userRepository.save(user));
     }
 
-    public void delete(User user){
 
+    public void delete(UUID id){
+        userRepository.deleteById(id);
     }
 }
