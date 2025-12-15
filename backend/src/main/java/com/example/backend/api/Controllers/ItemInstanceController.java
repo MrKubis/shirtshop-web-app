@@ -1,49 +1,41 @@
 package com.example.backend.api.Controllers;
 
-import com.example.backend.api.Repositories.ItemInstanceRepository;
-import com.example.backend.api.Models.ItemInstance;
+import com.example.backend.api.DTO.ItemInstance.ItemInstanceDto;
+import com.example.backend.api.DTO.ItemInstance.PatchItemInstanceDto;
+import com.example.backend.api.DTO.ItemInstance.PostItemInstanceDto;
+import com.example.backend.api.Services.ItemInstanceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/iteminstances")
 public class ItemInstanceController {
 
     @Autowired
-    private ItemInstanceRepository itemInstanceRepository;
+    private ItemInstanceService itemInstanceService;
 
     @GetMapping
-    public ResponseEntity<List<ItemInstance>> getItemInstances(){
-        if(itemInstanceRepository.findAll().isEmpty()){
-            return  ResponseEntity.notFound().build();
-        }
-        else{
-            return new ResponseEntity<List<ItemInstance>>(itemInstanceRepository.findAll(), HttpStatus.OK);
-        }
+    public List<ItemInstanceDto> getAll(){
+        return itemInstanceService.getAll();
+    }
+    @GetMapping("/id/{id}")
+    public ItemInstanceDto getById(UUID id){
+        return itemInstanceService.getById(id);
     }
     @PostMapping
-    public ResponseEntity<ItemInstance> createItemInstance(@RequestBody ItemInstance itemInstance){
-        return new ResponseEntity<ItemInstance>(itemInstanceRepository.save(itemInstance),HttpStatus.CREATED);
+    public ItemInstanceDto create(@RequestBody PostItemInstanceDto dto){
+        return itemInstanceService.create(dto);
     }
-    @PutMapping
-    public ResponseEntity<ItemInstance> editItemInstance(@RequestBody ItemInstance itemInstance){
-        Optional<ItemInstance> optional = itemInstanceRepository.findById(itemInstance.getId());
-        if (optional.isPresent())
-        {
-            ItemInstance newiteminstance = optional.get();
-            newiteminstance.setItem_id(itemInstance.getItem_id());
-            newiteminstance.setPrice(itemInstance.getPrice());
-            newiteminstance.setStatus(itemInstance.getStatus());
-            itemInstanceRepository.save(newiteminstance);
-            return new ResponseEntity<ItemInstance>(newiteminstance,HttpStatus.OK);
-        }
-        else
-            return ResponseEntity.notFound().build();
+    @PatchMapping("/{id}")
+    public ItemInstanceDto edit(@PathVariable UUID id,@RequestBody PatchItemInstanceDto dto){
+        return itemInstanceService.edit(id, dto);
+    }
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable UUID id){
+        itemInstanceService.delete(id);
     }
     
 }
