@@ -1,0 +1,40 @@
+.navbar-container{
+    font-weight: 500;
+    padding-block: 30px;
+    padding-inline: 20px;
+    font-size: larger;
+    display: flex;
+    
+    a{
+        padding:5px;
+        font-size: xx-large;
+        color: black;
+        text-decoration: none;
+        transition: 0.15s;
+
+        p{
+            margin:0;
+        }
+    }
+    a:visited{
+        text-decoration: none;
+    }
+    a:hover{
+        padding-inline: 15px;
+        background-color: black;
+        color: white;
+    }
+    .navbar-account{
+        margin-inline: auto;
+        display: flex;
+        justify-content:right;
+        gap:20px;
+    }
+    .navbar-pages{
+        margin-inline: auto;
+        display: flex;
+        justify-content:left;
+        gap:20px;
+    }
+
+}

@@ -14,7 +14,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class  ItemInstance {
+public class ItemInstance{
     @Id
     @GeneratedValue
     private UUID id;
