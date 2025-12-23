@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -36,6 +37,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.HashSet;
+import java.util.Random;
 
 @Configuration
 @EnableWebSecurity
@@ -70,12 +72,16 @@ public class SecurityConfig {
         return http
                 .csrf(scrf -> scrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/**").hasRole("ADMIN") // TUTAJ ODMAWIA DOSTEPU KAZDEMU
-                        .requestMatchers("/api/roles/**").hasRole("ADMIN")
                         .requestMatchers("/api/auth/token", "/api/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/auth/public-token").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/**").hasAnyRole("GUEST","USER","ADMIN")
+                        .requestMatchers(HttpMethod.POST,"/api/order").hasAnyRole("GUEST","USER","ADMIN")
+                        .requestMatchers(HttpMethod.POST,"/api/auth/token").hasRole("USER")
+                        .requestMatchers(HttpMethod.POST,"/api/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PATCH,"/api/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"/api/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated())
-                .oauth2ResourceServer((oauth2) -> oauth2
-                        .jwt(jwtConfigurer -> jwtConfigurer.jwtAuthenticationConverter(jwtAuthenticationConverter)))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(Customizer.withDefaults())
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
@@ -112,6 +118,9 @@ public class SecurityConfig {
     public CommandLineRunner createDefaultAdmin(UserRepository userRepository, PasswordEncoder encoder){
         return args -> {
 
+            //GUEST ROLE - FOR EVERYONE
+            Role guestRole = roleRepository.findByName("GUEST")
+                    .orElseGet(() -> roleRepository.save(new Role("GUEST")));
             //CREATING ADMIN AND USER ROLE
             Role adminRole = roleRepository.findByName("ADMIN")
                     .orElseGet(() -> roleRepository.save(new Role("ADMIN")));
@@ -141,6 +150,15 @@ public class SecurityConfig {
                 user.getRoles().add(userRole);
                 System.out.println("Default user created");
                 userRepository.save(user);
+            }
+            if(userRepository.findByUserName("guest").isEmpty()){
+                User guest = User.builder()
+                        .userName("guest")
+                        .roles(new HashSet<Role>())
+                        .build();
+                guest.getRoles().add(guestRole);
+                System.out.println("Guest user created");
+                userRepository.save(guest);
             }
         };
     }

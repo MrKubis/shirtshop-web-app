@@ -2,15 +2,18 @@ package com.example.backend.api.Services;
 
 import com.example.backend.api.Controllers.AuthController;
 import com.example.backend.api.DTO.UserRoleDTO;
+import com.example.backend.api.Exceptions.UserNotFoundException;
 import com.example.backend.api.Models.Role;
 import com.example.backend.api.Models.Token;
 import com.example.backend.api.Models.User;
+import com.example.backend.api.Principals.UserPrincipal;
 import com.example.backend.api.Repositories.RoleRepository;
 import com.example.backend.api.Repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +34,16 @@ public class AuthService {
         Token token = tokenService.generateToken(authentication);
         LOGGER.debug("Token requested for user: {}", authentication.getName());
         return token;
+    }
+
+    public Token generatePublicToken(){
+        User guest = userRepository.findByUserName("guest").orElseThrow(()->new UserNotFoundException());
+
+        UserPrincipal userPrincipal = new UserPrincipal(guest);
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(userPrincipal, null , userPrincipal.getAuthorities());
+        return tokenService.generateToken(auth);
+
     }
 
     public boolean appendRoleToUser(UserRoleDTO dto){
