@@ -9,17 +9,10 @@ public class ItemImageMapper {
         return ItemImageDto.builder()
                 .id(entity.getId())
                 .itemId(entity.getItem().getId())
-                .name(entity.getName())
-                .contentType(entity.getContentType())
+                .imageId(entity.getImage().getId())
+                .name(entity.getImage().getName())
+                .contentType(entity.getImage().getContentType())
                 .build();
     }
-    public DownloadImageDto toDownloadDto(final ItemImage entity){
-        return DownloadImageDto.builder()
-                .id(entity.getId())
-                .itemId(entity.getItem().getId())
-                .name(entity.getName())
-                .contentType(entity.getContentType())
-                .imageData(entity.getImageData())
-                .build();
-    }
+
 }
