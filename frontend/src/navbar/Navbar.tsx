@@ -1,8 +1,13 @@
 
 import { NavLink } from "react-router";
 import "./Navbar.css"
+import { useEffect } from "react";
+import api from "../api/api";
+
+
 
 export default function Navbar(){
+
     return(
         <div className="navbar-container">
             <div className="navbar-pages">
