@@ -58,7 +58,6 @@ public class ItemImageService {
         return itemImageMapper.toDto(itemImage);
     }
     public List<ItemImageDto> getItemImageList(UUID itemId){
-        Item item = itemRepository.findById(itemId).orElseThrow(()->new ItemNotFoundException(itemId));
           return itemImageRepository.findByItemId(itemId)
                   .stream()
                   .map(itemImageMapper::toDto)
