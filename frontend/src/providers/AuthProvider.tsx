@@ -19,7 +19,7 @@ export const AuthProvider = ({children} :PropsWithChildren) =>{
 
     //Co refresh strony
     useEffect(()=>{
-    api.get<User>("/account")
+    api.get<User>("/auth/public-token")
     .then(res => setUser(res.data))
     .catch(()=>setUser(null));
     },[]);
