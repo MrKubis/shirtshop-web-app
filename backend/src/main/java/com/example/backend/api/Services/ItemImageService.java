@@ -9,6 +9,7 @@ import com.example.backend.api.Models.ItemImage;
 import com.example.backend.api.Repositories.ImageRepository;
 import com.example.backend.api.Repositories.ItemImageRepository;
 import com.example.backend.api.Repositories.ItemRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+@Transactional
 @Service
 public class ItemImageService {
     @Autowired
@@ -47,7 +49,9 @@ public class ItemImageService {
                 .build();
         imageRepository.save(image);
 
+        System.out.println("Saved image");
         ItemImage itemImage = itemImageRepository.save(ItemImage.builder()
+                        .name(image.getName())
                         .image(image)
                         .item(item)
                         .build());

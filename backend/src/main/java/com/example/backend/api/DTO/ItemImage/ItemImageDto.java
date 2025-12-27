@@ -9,6 +9,5 @@ public record ItemImageDto(
         UUID id,
         UUID itemId,
         UUID imageId,
-        String name,
-        String contentType
+        String name
 ) {}

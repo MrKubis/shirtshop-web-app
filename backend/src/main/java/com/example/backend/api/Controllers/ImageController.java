@@ -23,7 +23,7 @@ public class ImageController {
     ResponseEntity<?> downloadImage(@PathVariable UUID id) throws IOException {
         DownloadImageDto dto = service.download(id);
         return ResponseEntity.ok()
-                .contentType(MediaType.valueOf(dto.contentType()))
+                .contentType(MediaType.parseMediaType(dto.contentType()))
                 .body(dto.imageData());
     }
 }

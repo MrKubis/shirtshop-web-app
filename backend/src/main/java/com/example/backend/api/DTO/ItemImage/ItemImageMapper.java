@@ -11,7 +11,6 @@ public class ItemImageMapper {
                 .itemId(entity.getItem().getId())
                 .imageId(entity.getImage().getId())
                 .name(entity.getImage().getName())
-                .contentType(entity.getImage().getContentType())
                 .build();
     }
 

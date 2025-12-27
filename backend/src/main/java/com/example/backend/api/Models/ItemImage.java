@@ -21,7 +21,9 @@ public class ItemImage {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Image image;
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id", nullable = false)
     private Item item;
+    @Column
+    private String name;
 }
