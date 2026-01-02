@@ -1,0 +1,15 @@
+ul{
+    padding-inline: 5%;
+    list-style: none;
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 5%;
+    justify-content: space-between;
+}
+li{
+    max-width: 500px;
+    transition: 0.2s;
+}
+li:hover{
+    cursor: pointer;
+}
