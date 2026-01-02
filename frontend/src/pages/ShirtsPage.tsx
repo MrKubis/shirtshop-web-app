@@ -4,14 +4,13 @@ import { Item, ItemImage } from "../models/Item"
 import ItemImagePanel from "../components/panels/ItemImagePanel"
 import "./styles/Page.css"
 import { NavLink } from "react-router"
+import { LineWobble } from 'ldrs/react'
+import 'ldrs/react/LineWobble.css'
 
 export default function ShirtsPage(){
 
-//TODO ZAPISYWANIE JAKOŚ ZDJĘĆ I SHIRT PANELS
-
     const [shirts, setShirts] = useState<Array<Item> | null > (null)
     const [isLoading, setLoading ] = useState<boolean> (true)
-    const [isLoaded, setLoaded] = useState<boolean>(false)
 
     useEffect(()=>{
         setLoading(true);
@@ -19,37 +18,35 @@ export default function ShirtsPage(){
         .then((response)=>{
             setShirts(response.data);
         })
+        .finally(() => {
+            setLoading(false);
+        }
+        );
     },[])
 
-    useEffect(()=>{
-        if(!shirts) return;
-        shirts.forEach(shirt => {
-            fetchItemImages(shirt);
-        }
-    );
-    },[shirts])
 
-    const fetchItemImages = ( item : Item) => {
-        api.get(`/images/item/${item.id}`)
-        .then((response)=>{
-            item.images = response.data;
-        })
-        .finally(()=>{
-            setLoading(false);
-            setLoaded(true);
-        })
-    }
+    if(isLoading) return <div>
+        <LineWobble
+                            size="100"
+                            stroke="8"
+                            bgOpacity="0.1"
+                            speed="1.75"
+                            color="black" 
+                            />
+                            <p>Loading...</p>
+        </div>
 
-    if(isLoading) return <p>Loading...</p>
     return(
         <ul>
-            {isLoaded &&  shirts?.map(shirt =>
-                <li>
+        {
+            shirts?.map(shirt =>
+                <li key={shirt.id}>
                     <NavLink to={`/shirts/${shirt.id}`}>
-                        <ItemImagePanel key = {shirt.id} item = {shirt} />
+                        <ItemImagePanel item = {shirt} />
                     </NavLink>
                 </li>
-            )}
+            )
+        }
         </ul>
     )
 }
