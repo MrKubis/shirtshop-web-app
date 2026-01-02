@@ -2,7 +2,7 @@
     font-weight: 500;
     padding-block: 20px;
     padding-inline: 5%;
-    font-size: calc(10px + 3vmin);
+    font-size:200%;
     display: flex;
     position: sticky;
     top: 0;
