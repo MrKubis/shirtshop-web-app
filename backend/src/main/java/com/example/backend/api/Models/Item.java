@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -27,6 +28,8 @@ public class Item {
     private String type;
     @Column
     private String description;
+    @Column
+    private Float price;
     @CreationTimestamp
     @Column(name="created_at")
     private LocalDateTime created_at;

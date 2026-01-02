@@ -5,5 +5,7 @@ import lombok.Builder;
 @Builder
 public record PostItemDto (
     String name,
-    String type
+    String type,
+    String description,
+    Float price
 ){}

@@ -19,14 +19,8 @@ public class ItemMapper {
                 .name(entity.getName())
                 .type(entity.getType())
                 .created_at(entity.getCreated_at())
-                .build();
-    }
-    public Item toItem(final ItemDto dto){
-        return Item.builder()
-                .id(dto.id())
-                .name(dto.name())
-                .type(dto.type())
-                .created_at(dto.created_at())
+                .description(entity.getDescription())
+                .price(entity.getPrice())
                 .build();
     }
     public Item fromPatchDto(final Item entity,final PatchItemDto dto)
@@ -36,6 +30,8 @@ public class ItemMapper {
                 .name(dto.name())
                 .type(dto.type())
                 .created_at(entity.getCreated_at())
+                .description(dto.description())
+                .price(dto.price())
                 .build();
     }
     public Item fromPostDto(final PostItemDto dto)
@@ -44,7 +40,8 @@ public class ItemMapper {
                 .name(dto.name())
                 .type(dto.type())
                 .created_at(LocalDateTime.now())
+                .description(dto.description())
+                .price(dto.price())
                 .build();
     }
-
 }

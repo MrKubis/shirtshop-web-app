@@ -10,6 +10,8 @@ public record ItemDto(
         UUID id,
         String name,
         String type,
+        String description,
+        Float price,
         LocalDateTime created_at
 ) {}
 
