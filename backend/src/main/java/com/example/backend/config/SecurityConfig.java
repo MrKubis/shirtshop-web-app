@@ -37,7 +37,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.util.HashSet;
-import java.util.Random;
 
 @Configuration
 @EnableWebSecurity
@@ -80,6 +79,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST,"/api/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PATCH,"/api/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE,"/api/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/api/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/api/roles/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/api/orders/**").hasRole("ADMIN")
+
 
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
