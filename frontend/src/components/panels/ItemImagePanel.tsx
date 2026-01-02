@@ -26,7 +26,7 @@ export default function ItemImagePanel(props:{item : Item}){
     return(
         <div className="item-container">
             {url && <img className="item-img" src = {url}/>}
-            <p>{ item.name.toUpperCase()}</p>
+            <h2>{ item.name.toUpperCase()}</h2>
         </div>
     )
 }

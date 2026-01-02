@@ -5,8 +5,9 @@
     img{
         width: 100%;
     }
-    p{
-    font-size: calc(5vmin);
+
+    h2{
+            font-size: 300%;
     font-weight: 400;
         margin: 0;
         margin-block: 5px;

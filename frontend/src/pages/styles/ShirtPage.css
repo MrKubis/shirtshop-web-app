@@ -1,0 +1,55 @@
+.images-container{
+    max-height:40%;
+    display:flex;
+    gap: 10%;
+    margin-inline: 5%;
+    justify-content: center;
+    user-select: none;
+
+}
+.info-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    .text-name{
+        font-size: 300%;
+    }
+    .text-description{
+        font-size: 150%;
+    }
+    .text-price{
+        font-size: 200%;
+    }
+    select{
+        text-align: center;
+        width: 30%;
+        background-color: rgb(241, 241, 241);
+        padding: 5mm;
+        border: 0;
+        border-radius: 0;
+        transition: 0.1s;
+
+        margin-bottom: 1%;
+    }
+    select:hover{
+        background-color: rgb(201, 201, 201);
+    }
+    option{
+        text-align: center;
+    }
+    button{
+        text-align: center;
+        width: 30%;
+        background-color: rgb(241, 241, 241);
+        padding: 5mm;
+        border: 0;
+        border-radius: 0;
+        transition: 0.1s;
+    }
+    button:hover{
+        background-color: rgb(201, 201, 201);
+    }
+}
