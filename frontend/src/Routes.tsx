@@ -5,6 +5,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import ShirtsPage from "./pages/ShirtsPage";
 import CartPage from "./pages/CartPage";
 import AboutPage from "./pages/AboutPage";
+import ShirtPage from "./pages/ShirtPage";
 
 export const routes: RouteObject[] =[
     {
@@ -21,7 +22,11 @@ export const routes: RouteObject[] =[
             },
             {
                 path:"shirts",
-                element:<ShirtsPage/>
+                element:<ShirtsPage/>,
+            },
+            {
+                path:"shirts/:id",
+                element:<ShirtPage/>
             },
             {
                 path:"cart",

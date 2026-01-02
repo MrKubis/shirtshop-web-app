@@ -25,6 +25,8 @@ public class Item {
     private String name;
     @Column
     private String type;
+    @Column
+    private String description;
     @CreationTimestamp
     @Column(name="created_at")
     private LocalDateTime created_at;
