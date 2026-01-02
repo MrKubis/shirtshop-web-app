@@ -3,7 +3,9 @@ import { UUID } from "crypto";
 export interface Item{
     id:UUID,
     name:string,
-    type:string
+    type:string,
+    description:string,
+    price:Number,
     images: Array<ItemImage> | null
 }
 
