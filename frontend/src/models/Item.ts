@@ -1,6 +1,7 @@
 import { UUID } from "crypto";
+import { useShoppingCart } from "../components/context/ShoppingCartContext";
 
-export interface Item{
+export type Item = {
     id:UUID,
     name:string,
     type:string,
@@ -9,7 +10,7 @@ export interface Item{
     images: Array<ItemImage> | null
 }
 
-export interface ItemImage{
+export type ItemImage = {
     id:UUID,
     imageId:UUID,
     name:string

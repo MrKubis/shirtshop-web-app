@@ -6,13 +6,17 @@ import { UUID } from "crypto";
 import { LineWobble } from "ldrs/react";
 import 'ldrs/react/LineWobble.css'
 import "./styles/ShirtPage.css"
+import { useShoppingCart } from "../components/context/ShoppingCartContext";
+import ItemPanel from "../components/panels/ItemPanel";
 export default function ShirtPage(){
+
     const id = useParams().id as UUID;
     const [itemImages,setItemImages] = useState<Array<ItemImage> | null > (null);
     const [item, setItem] = useState<Item | null> (null);
     const [isLoading, setLoading] = useState<boolean> (true);
 
     const [mainUrl, setMainUrl] = useState<string | null > (null);
+    const {getItemQuantity, increaseItemQuantity,decreaseItemQuantity,removeFromCart} = useShoppingCart();
 
     //get item info
     useEffect(()=>{
@@ -58,24 +62,7 @@ export default function ShirtPage(){
                             </div>
     return(
         <>
-        <div className="images-container">
-            {mainUrl && <img className="main-image" src={mainUrl} />}
-            {mainUrl && <img className="main-image" src={mainUrl} />}
-        </div>
-        <div className="info-container">
-            <h1 className="text-name">{item?.name}</h1>
-            <p className="text-description">{item?.description}</p>
-            <h3 className="text-price">{item?.price.toString()} zł</h3>
-            <select >
-                <option disabled selected> -- select a size -- </option>
-                <option>S</option>
-                <option>M</option>
-                <option>L</option>
-                <option>XL</option>
-            </select>
-            <button>Add to cart</button>
-        </div>
-
+        {item && <ItemPanel item={item} mainUrl={mainUrl}/>} 
         </>
     );
 }
