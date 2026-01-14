@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import api from "../api/api"
 import { Item, ItemImage } from "../models/Item"
 import ItemImagePanel from "../components/panels/ItemImagePanel"
-import "./styles/Page.css"
+import "./styles/ShirtsPage.css"
 import { NavLink } from "react-router"
 import { LineWobble } from 'ldrs/react'
 import 'ldrs/react/LineWobble.css'
@@ -37,16 +37,19 @@ export default function ShirtsPage(){
         </div>
 
     return(
-        <ul>
-        {
-            shirts?.map(shirt =>
-                <li key={shirt.id}>
-                    <NavLink to={`/shirts/${shirt.id}`}>
-                        <ItemImagePanel item = {shirt} />
-                    </NavLink>
-                </li>
-            )
-        }
-        </ul>
+        <div>
+            <ul>
+            {
+                shirts?.map(shirt =>
+                    <li key={shirt.id}>
+                        <NavLink to={`/shirts/${shirt.id}`}>
+                            <ItemImagePanel item = {shirt} />
+                        </NavLink>
+                    </li>
+                )
+            }
+            </ul>
+        </div>
+
     )
 }

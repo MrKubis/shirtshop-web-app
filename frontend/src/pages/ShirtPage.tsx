@@ -63,6 +63,7 @@ export default function ShirtPage(){
     return(
         <>
         {item && <ItemPanel item={item} mainUrl={mainUrl}/>} 
+       
         </>
     );
 }

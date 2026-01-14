@@ -6,7 +6,9 @@ body {
   font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  padding-inline: clamp(0.2rem, -0.004rem + 0.837vw, 1rem)
 }
+
 
 a{
   text-decoration: none;
@@ -15,4 +17,20 @@ a{
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+h1{
+  font-size:clamp(1.6rem, 1.422rem + 0.732vw, 2.3rem);
+}
+h2{
+font-size: clamp(1.4rem, 1.043rem + 1.464vw, 2.8rem);
+}
+p{
+font-size: clamp(1rem, 0.898rem + 0.418vw, 1.4rem)
+}
+ 
+@media (width >= 40em) {
+  
+}
+@media ( width >= 60em) {
+  
 }

@@ -12,15 +12,15 @@ export default function Navbar(){
         <div className="navbar-container">
             <div className="navbar-pages">
                 <NavLink to="">
-                    <p>Home</p>
+                    <h1>Home</h1>
                 </NavLink>
                 <NavLink to="shirts">
-                    <p>Shirts</p>
+                    <h1>Shirts</h1>
                 </NavLink>
             </div>
             <div className="navbar-account">
                 <NavLink to="cart">
-                    <p>Cart</p>
+                    <h1>Cart</h1>
                 </NavLink>
             </div>
         </div>

@@ -1,0 +1,32 @@
+.page-container{
+    
+    display: grid;
+    grid-auto-rows: 1fr;
+    grid-template-columns: 1fr;
+    padding-inline: 2%;
+    height: 100vh;
+    overflow-y: hidden;
+    @media (width >= 40em){
+        grid-template-columns: repeat(2,1fr);
+    }
+
+}
+.items-container{
+    overflow-y: scroll;
+    max-height: 100% ;
+}
+ul{
+    padding:0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap:1em;
+}
+li{
+    width: auto;
+}
+.summary-container{
+    position: sticky;
+    height: fit-content;
+}

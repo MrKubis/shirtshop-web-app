@@ -1,17 +1,17 @@
 .navbar-container{
+    z-index: 9999;
     font-weight: 500;
-    padding-block: 20px;
+    padding-block: 2vw;
     padding-inline: 5%;
-    font-size:200%;
     display: flex;
     position: sticky;
     top: 0;
     overflow: hidden;
     background-color: white;
     a{
-        padding:5px;
-        padding-inline: 15px;
-        font-size: 120%;
+        padding:clamp(0.3rem, 0.249rem + 0.209vw, 0.5rem);
+        padding-inline: 5px;
+        font-size: clamp(5rem, 0.71rem + 5.47vw, 7rem);
         color: black;
         text-decoration: none;
         transition: 0.15s;
@@ -21,7 +21,7 @@
         }
     }
     a:hover{
-        padding-inline: 20px;
+        padding-inline: 10vw;
         background-color: #111;
         color: white;
     }
@@ -29,12 +29,12 @@
         width: 100%;
         display: flex;
         justify-content: right;
-        gap:20px;
+        gap:3vw;
     }
     .navbar-pages{
         display: flex;
         justify-content: left;
-        gap:20px;
+        gap:3vw;
     }
 
 }

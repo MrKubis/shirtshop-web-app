@@ -1,22 +1,22 @@
-ul{
-    padding-inline: 5%;
-    list-style: none;
+.page-container{
+    width: 100%;
+    height: 100%;
+    padding-inline: 12em;
+}
+.shirts-list{
+    width: 100%;
     display: grid;
-    grid-template-columns: auto auto;
+    width: 100%;
+    margin-inline: auto;
+    grid-template-columns: 1fr 1fr;
     column-gap: 5%;
     row-gap: 10%;
     justify-content: space-between;
 }
+
 li{
-    max-width: 500px;
-    transition: 0.2s;
+    margin-inline: auto;
 }
 li:hover{
     cursor: pointer;
-}
-button{
-    font-size: x-large;
-}
-select{
-    font-size: x-large;
 }

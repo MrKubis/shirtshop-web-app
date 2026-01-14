@@ -36,7 +36,7 @@ export function ShoppingCartProvider({ children } : ShoppingCartProviderProps){
             }
             else {
                 return currItems.map(cartItem =>{
-                    if(cartItem.item.id === item.id){
+                    if(cartItem.item.id === item.id && cartItem.size === size){
                         return {...cartItem, quantity: cartItem.quantity + 1 }
                     }
                     else{
@@ -53,7 +53,7 @@ export function ShoppingCartProvider({ children } : ShoppingCartProviderProps){
             }
             else {
                 return currItems.map(cartItem =>{
-                    if(cartItem.item.id === item.id){
+                    if(cartItem.item.id === item.id && cartItem.size === size){
                         if(cartItem.quantity === 0) return cartItem;
                         return {...cartItem, quantity: cartItem.quantity - 1 };
                     }
