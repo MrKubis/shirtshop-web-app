@@ -1,16 +1,13 @@
 import { useState } from "react";
-import { Item } from "../../models/Item";
+import { Item, ItemImage } from "../../models/Item";
 import { useShoppingCart } from "../context/ShoppingCartContext";
 
-export default function ItemPanel(props:{item:Item, mainUrl:string | null}){
+export default function ItemPanel(props:{item:Item, itemImages:ItemImage[]}){
 
-    const item = props.item
-    const mainUrl = props.mainUrl
+    const item = props.item;
+    const itemImages = props.itemImages;
     const {
-    getItemQuantity,
     increaseItemQuantity,
-    decreaseItemQuantity,
-    removeFromCart,
     } = useShoppingCart()
     
     const [selectedSize, setSelectedSize] = useState<string>("S")
@@ -21,8 +18,11 @@ export default function ItemPanel(props:{item:Item, mainUrl:string | null}){
     return(
         <>
         <div className="images-container">
-            {mainUrl && <img className="main-image" src={mainUrl} />}
-            {mainUrl && <img className="main-image" src={mainUrl} />}
+            <ul className="image-list">
+                {itemImages.map(itemImage =>(<li key={itemImage.imageId}>
+                    <img src={`http://localhost:8080/api/images/download/${itemImage.imageId}`} />
+                </li>))}
+            </ul>
         </div>
         <div className="info-container">
             <h1 className="text-name">{item?.name}</h1>

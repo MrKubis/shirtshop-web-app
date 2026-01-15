@@ -38,7 +38,7 @@ export default function ShirtsPage(){
 
     return(
         <div>
-            <ul>
+            <ul className="shirts-list">
             {
                 shirts?.map(shirt =>
                     <li key={shirt.id}>

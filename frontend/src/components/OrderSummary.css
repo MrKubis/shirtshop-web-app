@@ -1,3 +1,22 @@
 h2{
     width: auto;
 }
+.order-form{
+    display: flex;
+    flex-direction: column;
+    gap: 0.4em;
+    align-items: center;
+    text-align: center;
+    input{
+        padding-block: 0.5em ;
+        font-family: "JetBrains Mono", monospace;
+        width: 70%;
+    }
+
+}
+.input-submit{
+    font-size: 100%;
+    font-weight: 400;
+    border: none;
+    padding: 0.5em;
+}

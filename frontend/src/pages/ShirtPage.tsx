@@ -11,11 +11,9 @@ import ItemPanel from "../components/panels/ItemPanel";
 export default function ShirtPage(){
 
     const id = useParams().id as UUID;
-    const [itemImages,setItemImages] = useState<Array<ItemImage> | null > (null);
+    const [itemImages,setItemImages] = useState<Array<ItemImage>> ([]);
     const [item, setItem] = useState<Item | null> (null);
     const [isLoading, setLoading] = useState<boolean> (true);
-
-    const [mainUrl, setMainUrl] = useState<string | null > (null);
     const {getItemQuantity, increaseItemQuantity,decreaseItemQuantity,removeFromCart} = useShoppingCart();
 
     //get item info
@@ -39,16 +37,6 @@ export default function ShirtPage(){
     }
     fetchItemImages(id);
     },[])
-    
-    useEffect(()=>{
-        if (!itemImages) return;
-        itemImages.forEach(itemImage =>{
-                if (itemImage.name.includes("main")){
-                    console.log(itemImage.name);
-                    setMainUrl(`http://localhost:8080/api/images/download/${itemImage.imageId}`);
-                }
-            })
-        },[itemImages])
 
     if(isLoading) return  <div>
                                 <LineWobble
@@ -61,9 +49,8 @@ export default function ShirtPage(){
                                 <p>Loading...</p>
                             </div>
     return(
-        <>
-        {item && <ItemPanel item={item} mainUrl={mainUrl}/>} 
-       
-        </>
+        <div className="item-page-container">
+            {item && <ItemPanel item={item} itemImages = {itemImages}/>} 
+        </div>
     );
 }

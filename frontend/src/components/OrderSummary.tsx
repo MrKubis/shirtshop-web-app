@@ -16,9 +16,15 @@ export default function OrderSummary(){
     return(
         <div>
             <h1>Total price: {totalPrice}zł</h1>
-            <h2>Send an email to me</h2>
-            <form>
-                <input type={"text"}/>
+            <h2>Send an order to me</h2>
+            <form className="order-form">
+                <h4>Your e-mail</h4>
+                <input type={"email"}/>
+                <br/>
+                <h4>Phone number</h4>
+                <input type={"tel"}/>
+                <br/>
+                <input className="input-submit" type="submit" value="Send order"/>
             </form>
         </div>
     )

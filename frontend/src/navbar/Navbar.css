@@ -1,7 +1,7 @@
 .navbar-container{
     z-index: 9999;
     font-weight: 500;
-    padding-block: 2vw;
+    padding-block: 1em;
     padding-inline: 5%;
     display: flex;
     position: sticky;
@@ -36,5 +36,9 @@
         justify-content: left;
         gap:3vw;
     }
+    h1{
+            padding-block: 0.3em;
 
+        margin: 0;
+    }
 }

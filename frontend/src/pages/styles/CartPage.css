@@ -9,23 +9,25 @@
     @media (width >= 40em){
         grid-template-columns: repeat(2,1fr);
     }
+    ul{
+    padding:0;
+    list-style: none;
+    display: grid;
+    flex-direction: column;
+    width: 100%;
+    gap:4em;
+
+    }
+    li{
+        width: auto;
+    }
 
 }
 .items-container{
     overflow-y: scroll;
     max-height: 100% ;
 }
-ul{
-    padding:0;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap:1em;
-}
-li{
-    width: auto;
-}
+
 .summary-container{
     position: sticky;
     height: fit-content;

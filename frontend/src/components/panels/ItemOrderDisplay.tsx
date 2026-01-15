@@ -1,4 +1,4 @@
-import {Plus, Minus , X} from "lucide-react"
+import {Plus, Minus , X, Trash2} from "lucide-react"
 import { useEffect, useState } from "react";
 import { Item, ItemImage } from "../../models/Item";
 import api from "../../api/api";
@@ -64,7 +64,7 @@ export default function ItemOrderDisplay(props: {item:Item, quantity :number, si
             <div className="modify-item-container">
                 <button><Plus size ={20} onClick={handleIncrease}/></button>
                 <button><Minus size = {20} onClick={handleDecrease}/></button>
-                <button><X size = {20} onClick={handleRemove}/></button>
+                <button><Trash2 size = {18} onClick={handleRemove}/></button>
             </div>
         </div>
     )
