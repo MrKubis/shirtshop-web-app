@@ -73,6 +73,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/token", "/api/auth/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/auth/public-token").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/order").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/**").hasAnyRole("GUEST","USER","ADMIN")
                         .requestMatchers(HttpMethod.POST,"/api/order").hasAnyRole("GUEST","USER","ADMIN")
                         .requestMatchers(HttpMethod.POST,"/api/auth/token").hasRole("USER")
